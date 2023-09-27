@@ -1,21 +1,31 @@
-HanziWriter.loadCharacterData('六').then(function(charData) {
-  var target = document.getElementById('target');
+function renderFanningStrokes(target, strokes) {
   var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.style.width = '150px';
-  svg.style.height = '150px';
+  svg.style.width = '75px';
+  svg.style.height = '75px';
+  svg.style.border = '1px solid #EEE'
+  svg.style.marginRight = '3px'
   target.appendChild(svg);
   var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
-  // set the transform property on the g element so the character renders at 150x150
-  var transformData = HanziWriter.getScalingTransform(150, 150);
+  // set the transform property on the g element so the character renders at 75x75
+  var transformData = HanziWriter.getScalingTransform(75, 75);
   group.setAttributeNS(null, 'transform', transformData.transform);
   svg.appendChild(group);
 
-  charData.strokes.forEach(function(strokePath) {
+  strokes.forEach(function(strokePath) {
     var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttributeNS(null, 'd', strokePath);
     // style the character paths
     path.style.fill = '#555';
     group.appendChild(path);
   });
+}
+
+HanziWriter.loadCharacterData('是').then(function(charData) {
+  var target = document.getElementById('target');
+  for (var i = 0; i < charData.strokes.length; i++) {
+    var strokesPortion = charData.strokes.slice(0, i + 1);
+    renderFanningStrokes(target, strokesPortion);
+  }
 });
+      
